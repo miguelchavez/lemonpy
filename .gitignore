@@ -1,0 +1,11 @@
+*~
+.*~
+.directory
+*.diff
+*.bak
+*.bkp
+*.alt
+*.list
+*.bz2
+release.sh
+comandos.git
