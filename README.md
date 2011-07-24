@@ -8,5 +8,5 @@ lemonPy uses Qt4 via *pySide*, and uses *django* as a helper for database creati
 help the rapid development [we hope so].
 
 
-Miguel Chavez Gamboa
+Miguel Chavez Gamboa.
 miguel at lemonpos dot org
