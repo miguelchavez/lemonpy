@@ -9,3 +9,4 @@
 *.bz2
 release.sh
 comandos.git
+*.pyc
