@@ -1,0 +1,90 @@
+#!/usr/bin/env python
+
+#/***************************************************************************
+#*   Copyright (C) 2011 by Miguel Chavez Gamboa                            *
+#*   miguel@lemonpos.org                                                   *
+#*                                                                         *
+#*   This program is free software; you can redistribute it and/or modify  *
+#*   it under the terms of the GNU General Public License as published by  *
+#*   the Free Software Foundation; either version 2 of the License, or     *
+#*   (at your option) any later version.                                   *
+#*                                                                         *
+#*   This program is distributed in the hope that it will be useful,       *
+#*   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+#*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+#*   GNU General Public License for more details.                          *
+#*                                                                         *
+#*   You should have received a copy of the GNU General Public License     *
+#*   along with this program; if not, write to the                         *
+#*   Free Software Foundation, Inc.,                                       *
+#*   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
+#***************************************************************************/
+
+# This is only needed for Python v2 but is harmless for Python v3.
+#import sip
+#sip.setapi('QVariant', 2)
+
+from PySide import QtCore, QtGui, QtUiTools
+
+from ui_mainview import Ui_mainForm
+
+class MainWindow(QtGui.QMainWindow, Ui_mainForm):
+    def __init__(self, parent=None):
+        super(MainWindow, self).__init__(parent)
+        self.setupUi(self)
+        
+        #self.setCentralWidget()
+
+        self.readSettings()
+        self.setUnifiedTitleAndToolBarOnMac(True)
+        print 'finish init...'
+
+    def closeEvent(self, event):
+        self.writeSettings()
+        event.accept()
+        print 'Close Event...'
+
+
+    def about(self):
+        QtGui.QMessageBox.about(self, "About LemonPy",
+                "<b>LemonPy</b> is the prototype for the new lemonPOS."
+                "The name means Lemon Pie and also refers to Python.")
+
+
+    def createActions(self):
+        print 'creating actions...'
+        self.exitAction = QtGui.QAction("E&xit", self, shortcut="Ctrl+Q",
+                statusTip="Exit lemonPy", triggered=self.close)
+
+        self.aboutAction = QtGui.QAction("&About", self,
+                statusTip="Show the lemonPy's About box",
+                triggered=self.about)
+
+
+    def readSettings(self):
+        print 'Reading settings...'
+        settings = QtCore.QSettings("codea.me", "lemonPy")
+        pos = settings.value("pos", QtCore.QPoint(200, 200))
+        size = settings.value("size", QtCore.QSize(400, 400))
+        self.resize(size)
+        self.move(pos)
+        print 'settings readed'
+
+
+    def writeSettings(self):
+        print 'writing settings'
+        settings = QtCore.QSettings("codea.me", "lemonPy")
+        settings.setValue("pos", self.pos())
+        settings.setValue("size", self.size())
+        print 'settings written'
+
+
+
+if __name__ == '__main__':
+
+    import sys
+
+    app = QtGui.QApplication(sys.argv)
+    mainWin = MainWindow()
+    mainWin.show()
+    sys.exit(app.exec_())
