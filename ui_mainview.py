@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainview.ui'
 #
-# Created: Tue Aug  2 00:05:55 2011
+# Created: Tue Aug  2 00:50:16 2011
 #      by: pyside-uic 0.2.9 running on PySide 1.0.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -217,17 +217,17 @@ class Ui_mainForm(object):
         self.horizontalLayout_3.addWidget(self.lblStatusTime)
         self.verticalLayout.addWidget(self.frameStatus)
         self.horizontalLayout.addLayout(self.verticalLayout)
-        self.groupTotals = QtGui.QGroupBox(self.mainWidget)
+        self.groupTotals = QtGui.QWidget(self.mainWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Maximum, QtGui.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.groupTotals.sizePolicy().hasHeightForWidth())
         self.groupTotals.setSizePolicy(sizePolicy)
-        self.groupTotals.setTitle("")
         self.groupTotals.setObjectName("groupTotals")
         self.gridLayout = QtGui.QGridLayout(self.groupTotals)
         self.gridLayout.setContentsMargins(1, 1, 1, 1)
         self.gridLayout.setSpacing(1)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setObjectName("gridLayout")
         self.lblSubtotalPre = QtGui.QLabel(self.groupTotals)
         self.lblSubtotalPre.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)

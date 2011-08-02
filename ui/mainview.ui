@@ -522,15 +522,12 @@
          </layout>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupTotals">
+         <widget class="QWidget" name="groupTotals" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
-          </property>
-          <property name="title">
-           <string/>
           </property>
           <layout class="QGridLayout" name="gridLayout">
            <property name="margin">
