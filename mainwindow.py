@@ -27,9 +27,20 @@ from ui_mainview import *
 import decimal
 from decimal import *
 
+#django imports
+import os, sys
+from django.utils.translation import ugettext as _
+
 class MainWindow(QtGui.QMainWindow, Ui_mainForm):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
+
+        #NOTE: Next code is for django to know where settings.py is.
+        os.environ['DJANGO_SETTINGS_MODULE']='settings'
+        # and to add to the sys path the path where this app is. not needed now.
+        #sys.path+= [os.path.split(os.path.split(os.path.abspath(__file__))[0])[0]]
+        
+        
         self.setupUi(self)
 
         self.setCentralWidget(self.mainWidget)
@@ -46,8 +57,8 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         # go fullscreen
         self.showFullScreen() #TODO:Add an option to not show fullscreen.
 
-        #Create the actions...
         self.createActions()
+        self.createToolBars()
 
         #TODO: Decide which method use to get payment options.
         #      By default is CASH, a button to launch a dialog to get debit/credit card data. Another payment method?
@@ -73,6 +84,8 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.updateDate()
         self.lblStatusCashier.setText("Unattended")
 
+        QtCore.QTimer.singleShot(1000, self.setupSalesWidget) #wait some time to let the widget take its final size.
+
 
     def closeEvent(self, event):
         #TODO:  Can we close? Is there any sale in process? Ask the user to really exit and discard the sale?
@@ -88,26 +101,89 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
     def createActions(self):
         print 'creating actions...'
-        self.exitAction = QtGui.QAction("E&xit", self, shortcut="Ctrl+Q", statusTip="Exit lemonPy", triggered=self.close)
-        self.aboutAction = QtGui.QAction("&About", self, statusTip="Show the lemonPy's About box",  triggered=self.about)
-        self.showPaymentOptionsAction = QtGui.QAction("Show Payment Options", self, shortcut="Ctrl+P", statusTip="Show more payment options...",  triggered=self.showPaymentOptions)
+        self.exitAction = QtGui.QAction(_("E&xit"), self, shortcut="Ctrl+Q", triggered=self.close)
+        self.aboutAction = QtGui.QAction(_("&About"), self, statusTip=_("About"),  triggered=self.about)
+        self.showPaymentOptionsAction = QtGui.QAction(_("Show Payment Options"), self, shortcut="Ctrl+P", triggered=self.showPaymentOptions)
+        self.balanceAction = QtGui.QAction(_("Balance"), self, shortcut="Ctrl+B",  triggered=self.balance )
+        self.loginAction = QtGui.QAction(_("Login"), self, shortcut="Ctrl+L",  triggered=self.login )
+        self.codeFocusAction = QtGui.QAction(_("Enter Code"), self, shortcut="F2",  triggered=self.editItemCode.setFocus )
+        self.searchAction = QtGui.QAction(_("Search Products"), self, shortcut="F3",  triggered=self.showSearch )
+        self.removeItemAction = QtGui.QAction(_("Remove Item"), self,  triggered=self.removeSelectedItem )
+        self.finishTransactionAction = QtGui.QAction(_("Finish Transaction"), self, shortcut="F12",  triggered=self.finishTransaction )
+        self.cancelTransactionAction = QtGui.QAction(_("Cancel Transaction"), self, shortcut="F10",  triggered=self.cancelTransaction )
+        self.cancelTicketAction = QtGui.QAction(_("Cancel Ticket"), self, shortcut="F11",  triggered=self.cancelTicket )
+        self.startOperationsAction = QtGui.QAction(_("Start Operations"), self, shortcut="Ctrl+N",  triggered=self.startOperations ) #FIXME: QKeySequence::New
+        self.goPayAction = QtGui.QAction(_("Enter Payment"), self, shortcut="F4",  triggered=self.editTendered.setFocus )
+        self.priceCheckerAction = QtGui.QAction(_("Price Checker"), self, shortcut="F9",  triggered=self.showPriceChecker )
+        self.reprintTicketAction = QtGui.QAction(_("Reprint Ticket"), self, shortcut="F5",  triggered=self.reprintTicket )
+        self.cashInAction = QtGui.QAction(_("Cash In"), self, shortcut="F8",  triggered=self.cashIn )
+        self.cashOutAction = QtGui.QAction(_("Cash Out"), self, shortcut="F7",  triggered=self.cashOut )
+        self.cashAvailableAction = QtGui.QAction(_("Cash Available"), self, shortcut="F6",  triggered=self.cashAvailable )
+        self.endOfDayAction = QtGui.QAction(_("End Of Day"), self, shortcut="Ctrl+W",  triggered=self.endOfDay ) #FIXME: QKeySequence::Close
+        self.lockScreenAction = QtGui.QAction(_("Lock Screen"), self, shortcut="Ctrl+Space",  triggered=self.lockScreen ) #FIXME: Qt::CTRL+Qt::Key_Space
+        self.suspendSaleAction = QtGui.QAction(_("Suspend Sale"), self, shortcut="Ctrl+Backspace",  triggered=self.suspendSale ) #FIXME: Qt::CTRL+Qt::Key_Backspace
+        self.discountAction = QtGui.QAction(_("Apply Discount"), self, shortcut="Ctrl+D",  triggered=self.applyDiscount )
+        self.resumeSaleAction = QtGui.QAction(_("Resume Sale"), self, shortcut="Ctrl+R",  triggered=self.resumeSale )
+        self.configAction = QtGui.QAction(_("Configure Lemon"), self,  triggered=self.config )
+        
 
-        self.exitAction.setIcon(QtGui.QIcon(":/images/icons/images/money.png"))
-        self.aboutAction.setIcon(QtGui.QIcon(":/images/icons/images/card.png"))
-        self.showPaymentOptionsAction.setIcon(QtGui.QIcon(":/images/icons/images/card.png"))
+        self.exitAction.setIcon(QtGui.QIcon(":/icons/images/lemon-exit.png"))
+        self.aboutAction.setIcon(QtGui.QIcon(":/icons/images/lemon-tag.png"))
+        self.showPaymentOptionsAction.setIcon(QtGui.QIcon(":/icons/images/card.png"))
+        self.loginAction.setIcon(QtGui.QIcon(":/icons/images/lemon-user.png"))
+        self.balanceAction.setIcon(QtGui.QIcon(":/icons/images/lemon-balance.png"))
+        self.codeFocusAction.setIcon(QtGui.QIcon(":/icons/images/lemon-barcode.png"))
+        self.searchAction.setIcon(QtGui.QIcon(":/icons/images/lemon-search.png"))
+        self.removeItemAction.setIcon(QtGui.QIcon(":/icons/images/lemon-eraser.png"))
+        self.finishTransactionAction.setIcon(QtGui.QIcon(":/icons/images/lemon-transaction-accept.png"))
+        self.cancelTransactionAction.setIcon(QtGui.QIcon(":/icons/images/lemon-transaction-cancel.png"))
+        self.cancelTicketAction.setIcon(QtGui.QIcon(":/icons/images/lemon-ticket-cancel.png"))
+        self.startOperationsAction.setIcon(QtGui.QIcon(":/icons/images/lemon-start.png"))
+        self.goPayAction.setIcon(QtGui.QIcon(":/icons/images/lemon-pay.png"))
+        self.priceCheckerAction.setIcon(QtGui.QIcon(":/icons/images/lemon-price-checker.png"))
+        self.reprintTicketAction.setIcon(QtGui.QIcon(":/icons/images/lemon-print-ticket.png"))
+        self.cashInAction.setIcon(QtGui.QIcon(":/icons/images/lemon-cashin.png"))
+        self.cashOutAction.setIcon(QtGui.QIcon(":/icons/images/lemon-cashout.png"))
+        self.cashAvailableAction.setIcon(QtGui.QIcon(":/icons/images/lemon-money.png"))
+        self.endOfDayAction.setIcon(QtGui.QIcon(":/icons/images/lemon-calendar-small.png"))
+        self.lockScreenAction.setIcon(QtGui.QIcon(":/icons/images/lemon-lock-screen.png"))
+        self.suspendSaleAction.setIcon(QtGui.QIcon(":/icons/images/lemon-inbox.png"))
+        self.discountAction.setIcon(QtGui.QIcon(":/icons/images/lemon-discount.png"))
+        self.resumeSaleAction.setIcon(QtGui.QIcon(":/icons/images/lemon-outbox.png"))
+        self.configAction.setIcon(QtGui.QIcon(":/icons/images/lemon-configure.png"))
 
+
+    def createToolBars(self):
         #Adding the left toolbar. non-movable.
         self.toolBarLeft  = QtGui.QToolBar("Left Toolbar")
         self.toolBarLeft.setMovable(False)
         self.addToolBar(QtCore.Qt.LeftToolBarArea, self.toolBarLeft)
-        self.toolBarLeft.addAction(self.exitAction)
         self.toolBarLeft.addAction(self.aboutAction)
+        self.toolBarLeft.addAction(self.startOperationsAction)
+        self.toolBarLeft.addAction(self.balanceAction)
+        self.toolBarLeft.addAction(self.endOfDayAction)
+        self.toolBarLeft.addAction(self.suspendSaleAction)
+        self.toolBarLeft.addAction(self.resumeSaleAction)
+        self.toolBarLeft.addAction(self.configAction)
+        self.toolBarLeft.addAction(self.exitAction)
         #NOTE: Why the shortcuts dont work if the actions are not visible in the ui via a toolbar or menubar?
 
         #Adding the top toolbar, non-movable for some important actions. This toolbar is not on the toolbarArea, it is aside the code input box.
         self.toolBarTop = QtGui.QToolBar("Top Toolbar", self.toolWidget)
         self.toolBarTop.setMovable(False)
-        self.toolBarTop.addAction(self.aboutAction)
+        self.toolBarTop.addAction(self.loginAction)
+        self.toolBarTop.addAction(self.codeFocusAction)
+        self.toolBarTop.addAction(self.removeItemAction)
+        self.toolBarTop.addAction(self.goPayAction)
+        self.toolBarTop.addAction(self.finishTransactionAction)
+        self.toolBarTop.addAction(self.cancelTransactionAction)
+        self.toolBarTop.addAction(self.cancelTicketAction)
+        self.toolBarTop.addAction(self.reprintTicketAction)
+        self.toolBarTop.addAction(self.cashInAction)
+        self.toolBarTop.addAction(self.cashOutAction)
+        self.toolBarTop.addAction(self.cashAvailableAction)
+        self.toolBarTop.addAction(self.priceCheckerAction)
+        
         self.toolWidgetLayout.addWidget(self.toolBarTop)
 
         #Adding the tendered widget toolbar.
@@ -117,10 +193,80 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.tenderedWidgetLayout.addWidget(self.tenderedToolBar)
 
 
+    ########################## METHODS ###########################
+
+    def setupSalesWidget(self):
+        tableSize = self.tableSale.size()
+        piece = tableSize.width()/10
+        print piece
+        self.tableSale.horizontalHeader().setResizeMode(QtGui.QHeaderView.Interactive)
+        self.tableSale.horizontalHeader().resizeSection(0, piece/2)
+        self.tableSale.horizontalHeader().resizeSection(1, piece*5*0.98)
+        self.tableSale.horizontalHeader().resizeSection(2, piece*1.5)
+        self.tableSale.horizontalHeader().resizeSection(3, piece*1.5)
+        self.tableSale.horizontalHeader().resizeSection(4, piece*1.5)
+    
     def showPaymentOptions(self):
         #Not coded yet...
         print 'selecting payment options...'
 
+    def login(self):
+        pass
+    
+    def balance(self):
+        pass
+    
+    def showSearch(self):
+        pass
+    
+    def removeSelectedItem(self):
+        pass
+    
+    def finishTransaction(self):
+        pass
+    
+    def cancelTransaction(self):
+        pass
+    
+    def cancelTicket(self):
+        pass
+    
+    def startOperations(self):
+        pass
+    
+    def showPriceChecker(self):
+        pass
+    
+    def reprintTicket(self):
+        pass
+    
+    def cashIn(self):
+        pass
+    
+    def cashOut(self):
+        pass
+    
+    def cashAvailable(self):
+        pass
+    
+    def endOfDay(self):
+        pass
+
+    def lockScreen(self):
+        pass
+
+    def suspendSale(self):
+        pass
+
+    def applyDiscount(self):
+        pass
+
+    def resumeSale(self):
+        pass
+
+    def config(self):
+        pass
+    
 
     def updateClock(self):
         time = QtCore.QTime.currentTime()
@@ -132,7 +278,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
         self.lblStatusTime.setText(timeString)
         
-        if time.hour() == 0 and time.minute() == 0 and time.second() == 0:
+        if time.hour() == 0 and time.minute() == 0 and (time.second() == 0 or time.second() == 1 ):
             updateDate()
 
 

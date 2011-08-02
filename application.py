@@ -25,7 +25,7 @@
 import sip
 sip.setapi('QVariant', 2)
 
-from PySide import QtGui
+from PySide import QtGui, QtCore
 from mainwindow import MainWindow
 
 
@@ -34,6 +34,14 @@ if __name__ == '__main__':
     import sys
 
     app = QtGui.QApplication(sys.argv)
+    #load style sheet
+    archivo = QtCore.QFile(':/styles/style.qss')
+    if not archivo.open(QtCore.QIODevice.ReadOnly):
+        print 'Could not open the style...'
+    else:
+        style = archivo.readAll().data()
+        app.setStyleSheet(style)
+    
     mainWin = MainWindow()
     mainWin.show()
     sys.exit(app.exec_())

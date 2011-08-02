@@ -1,6 +1,49 @@
 <RCC>
-    <qresource prefix="/images/icons" >
-        <file>images/card.png</file>
-        <file>images/money.png</file>
-    </qresource>
+  <qresource prefix="icons">
+    <file>images/backg.png</file>
+    <file>images/lemon-discount.png</file>
+    <file>images/lemon-inbox.png</file>
+    <file>images/lemon-lock-screen.png</file>
+    <file>images/lemon-outbox.png</file>
+    <file>images/lemon-start.png</file>
+    <file>images/lemon-users.png</file>
+    <file>images/lemon-balance.png</file>
+    <file>images/lemon-barcode.png</file>
+    <file>images/lemon-box.png</file>
+    <file>images/lemon-boxcancel.png</file>
+    <file>images/lemon-calendar-small.png</file>
+    <file>images/lemon-cashin.png</file>
+    <file>images/lemon-cashout.png</file>
+    <file>images/lemon-categories.png</file>
+    <file>images/lemon-charts.png</file>
+    <file>images/lemon-clock.png</file>
+    <file>images/lemon-configure.png</file>
+    <file>images/lemon-credit-card.png</file>
+    <file>images/lemon-currency.png</file>
+    <file>images/lemon-eraser.png</file>
+    <file>images/lemon-exit.png</file>
+    <file>images/lemon-groups.png</file>
+    <file>images/lemon-lock-screen.png</file>
+    <file>images/lemon-money.png</file>
+    <file>images/lemon-offers.png</file>
+    <file>images/lemon-pay.png</file>
+    <file>images/lemon-payment-mode.png</file>
+    <file>images/lemon-price-checker.png</file>
+    <file>images/lemon-print-ticket.png</file>
+    <file>images/lemon-printer.png</file>
+    <file>images/lemon-reports.png</file>
+    <file>images/lemon-ruler.png</file>
+    <file>images/lemon-search.png</file>
+    <file>images/lemon-tag.png</file>
+    <file>images/lemon-ticket-cancel.png</file>
+    <file>images/lemon-ticket.png</file>
+    <file>images/lemon-transaction-accept.png</file>
+    <file>images/lemon-transaction-cancel.png</file>
+    <file>images/lemon-user.png</file>
+    <file>images/card.png</file>
+    <file>images/money.png</file>
+  </qresource>
+  <qresource prefix="styles">
+    <file>style.qss</file>
+  </qresource>
 </RCC>
