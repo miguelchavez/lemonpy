@@ -1,0 +1,62 @@
+/**  Simple Style for Lemon (Default style).
+ **  Miguel Chavez Gamboa 2007-2011
+ **  miguel@lemonpos.org
+ **
+ **  This style themes only certain objects, such as login&passowrd dialog some labels, and
+ **  the tableview/listview. All other objects are left with the kde/qt theme used. In my case
+ **  I wanted to use the oxygen style.
+ **
+ **  Some notes to style writers:
+ **  Lemon Styles are Qt stylesheets. And this are a modification of HTML CSS.
+ **  For more information about qt stylesheets syntax consult the qt documentation:
+ **  http://doc.trolltech.com/4.3/stylesheet.html
+ **
+ **  All paths to images are encoded as "[STYLE_PATH]" (without quotes), and at runtime
+ **  will be expanded to real path which will be the kde "appdata" dir and the lemon's styles subdir.
+ **  Note that there is no space or other character between [STYLE_PATH] and the image filename.
+ */
+
+
+QLabel#lblSaleTaxes, QLabel#lblSubtotal
+{
+ color: darkGray;
+ font-weight: bold;
+ font-size:30px;
+}
+
+QLabel#lblSaleTaxesPre, QLabel#lblSubtotalPre
+{
+ color: darkGray;
+ font-weight: bold;
+ font-size: 30px;
+}
+
+QLabel#labelTotal, QLabel#labelChange
+{
+ color: #0b69fd;
+ font-weight: bold;
+ font-size:30px;
+}
+
+QLabel#labelTotalpre , QLabel#labelChangepre, QLabel#lblTendered
+{
+ color: black;
+ font-weight: bold;
+ font-size: 30px;
+}
+
+
+
+/** Table **/
+/* Including the listviews.. :O.
+   Theming the ScrollArea gives same result but, with a strange behavoir, the headers are black...*/
+QTableWidget#tableReturnProducts, QListView#listView, QTableWidget#tableSale,QTableWidget#tableSearch,QTableView#ticketView
+{
+  /*selection-background-color: #94f2b4;*/ /*#c4e4f7;*/
+  /*selection-color: blue;*/
+  background-color: white;
+  background-image: url(':/icons/images/backg.png');
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat:no-repeat;
+}
