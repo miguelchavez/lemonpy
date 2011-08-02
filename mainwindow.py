@@ -124,6 +124,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.suspendSaleAction = QtGui.QAction(_("Suspend Sale"), self, shortcut="Ctrl+Backspace",  triggered=self.suspendSale ) #FIXME: Qt::CTRL+Qt::Key_Backspace
         self.discountAction = QtGui.QAction(_("Apply Discount"), self, shortcut="Ctrl+D",  triggered=self.applyDiscount )
         self.resumeSaleAction = QtGui.QAction(_("Resume Sale"), self, shortcut="Ctrl+R",  triggered=self.resumeSale )
+        self.currencyConversionAction = QtGui.QAction(_("Currency Conversion"), self,  triggered=self.showCurrencyConv )
         self.configAction = QtGui.QAction(_("Configure Lemon"), self,  triggered=self.config )
         
 
@@ -150,6 +151,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.suspendSaleAction.setIcon(QtGui.QIcon(":/icons/images/lemon-inbox.png"))
         self.discountAction.setIcon(QtGui.QIcon(":/icons/images/lemon-discount.png"))
         self.resumeSaleAction.setIcon(QtGui.QIcon(":/icons/images/lemon-outbox.png"))
+        self.currencyConversionAction.setIcon(QtGui.QIcon(":/icons/images/lemon-currency.png"))
         self.configAction.setIcon(QtGui.QIcon(":/icons/images/lemon-configure.png"))
 
 
@@ -162,6 +164,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.toolBarLeft.addAction(self.startOperationsAction)
         self.toolBarLeft.addAction(self.balanceAction)
         self.toolBarLeft.addAction(self.endOfDayAction)
+        self.toolBarLeft.addAction(self.lockScreenAction)
         self.toolBarLeft.addAction(self.suspendSaleAction)
         self.toolBarLeft.addAction(self.resumeSaleAction)
         self.toolBarLeft.addAction(self.configAction)
@@ -175,6 +178,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.toolBarTop.addAction(self.codeFocusAction)
         self.toolBarTop.addAction(self.removeItemAction)
         self.toolBarTop.addAction(self.goPayAction)
+        self.toolBarTop.addAction(self.discountAction)
         self.toolBarTop.addAction(self.finishTransactionAction)
         self.toolBarTop.addAction(self.cancelTransactionAction)
         self.toolBarTop.addAction(self.cancelTicketAction)
@@ -190,7 +194,11 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.tenderedToolBar = QtGui.QToolBar("Tendered Toolbar", self.tenderedWidget)
         self.tenderedToolBar.setMovable(False)
         self.tenderedToolBar.addAction(self.showPaymentOptionsAction)
+        self.tenderedToolBar.addAction(self.currencyConversionAction)
         self.tenderedWidgetLayout.addWidget(self.tenderedToolBar)
+
+        self.toolBarTop.setIconSize(QtCore.QSize(32,32))
+        self.toolBarLeft.setIconSize(QtCore.QSize(32,32))
 
 
     ########################## METHODS ###########################
@@ -198,7 +206,6 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
     def setupSalesWidget(self):
         tableSize = self.tableSale.size()
         piece = tableSize.width()/10
-        print piece
         self.tableSale.horizontalHeader().setResizeMode(QtGui.QHeaderView.Interactive)
         self.tableSale.horizontalHeader().resizeSection(0, piece/2)
         self.tableSale.horizontalHeader().resizeSection(1, piece*5*0.98)
@@ -262,6 +269,9 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         pass
 
     def resumeSale(self):
+        pass
+
+    def showCurrencyConv(self):
         pass
 
     def config(self):
