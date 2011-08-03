@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainview.ui'
 #
-# Created: Tue Aug  2 00:50:16 2011
+# Created: Wed Aug  3 00:14:43 2011
 #      by: pyside-uic 0.2.9 running on PySide 1.0.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -109,22 +109,22 @@ class Ui_mainForm(object):
         self.verticalLayout.setSpacing(1)
         self.verticalLayout.setContentsMargins(1, 1, 1, 1)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.groupClient = QtGui.QGroupBox(self.mainWidget)
-        self.groupClient.setMinimumSize(QtCore.QSize(80, 80))
-        self.groupClient.setObjectName("groupClient")
-        self.horizontalLayout_5 = QtGui.QHBoxLayout(self.groupClient)
+        self.groupCustomer = QtGui.QGroupBox(self.mainWidget)
+        self.groupCustomer.setMinimumSize(QtCore.QSize(80, 80))
+        self.groupCustomer.setObjectName("groupCustomer")
+        self.horizontalLayout_5 = QtGui.QHBoxLayout(self.groupCustomer)
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.lblClientPhoto = QtGui.QLabel(self.groupClient)
+        self.lblClientPhoto = QtGui.QLabel(self.groupCustomer)
         self.lblClientPhoto.setMinimumSize(QtCore.QSize(64, 64))
         self.lblClientPhoto.setMaximumSize(QtCore.QSize(48, 48))
         self.lblClientPhoto.setText("")
         self.lblClientPhoto.setPixmap(QtGui.QPixmap(":/icons/images/lemon-users.png"))
         self.lblClientPhoto.setObjectName("lblClientPhoto")
         self.horizontalLayout_5.addWidget(self.lblClientPhoto)
-        self.lblClientName = QtGui.QLabel(self.groupClient)
+        self.lblClientName = QtGui.QLabel(self.groupCustomer)
         self.lblClientName.setObjectName("lblClientName")
         self.horizontalLayout_5.addWidget(self.lblClientName)
-        self.verticalLayout.addWidget(self.groupClient)
+        self.verticalLayout.addWidget(self.groupCustomer)
         self.groupPaymentClient = QtGui.QGroupBox(self.mainWidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
@@ -381,12 +381,12 @@ class Ui_mainForm(object):
         self.tableSale.horizontalHeaderItem(2).setText(QtGui.QApplication.translate("mainForm", "Price", None, QtGui.QApplication.UnicodeUTF8))
         self.tableSale.horizontalHeaderItem(3).setText(QtGui.QApplication.translate("mainForm", "Discount", None, QtGui.QApplication.UnicodeUTF8))
         self.tableSale.horizontalHeaderItem(4).setText(QtGui.QApplication.translate("mainForm", "Total", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupClient.setTitle(QtGui.QApplication.translate("mainForm", "Client", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupCustomer.setTitle(QtGui.QApplication.translate("mainForm", "Customer", None, QtGui.QApplication.UnicodeUTF8))
         self.lblClientName.setText(QtGui.QApplication.translate("mainForm", ".", None, QtGui.QApplication.UnicodeUTF8))
         self.groupPaymentClient.setTitle(QtGui.QApplication.translate("mainForm", "Payment Options", None, QtGui.QApplication.UnicodeUTF8))
         self.checkCash.setText(QtGui.QApplication.translate("mainForm", "Ca&sh", None, QtGui.QApplication.UnicodeUTF8))
         self.checkCard.setText(QtGui.QApplication.translate("mainForm", "Credit/Debit", None, QtGui.QApplication.UnicodeUTF8))
-        self.lblStatusCashier.setText(QtGui.QApplication.translate("mainForm", "Cashier:", None, QtGui.QApplication.UnicodeUTF8))
+        self.lblStatusCashier.setText(QtGui.QApplication.translate("mainForm", ".", None, QtGui.QApplication.UnicodeUTF8))
         self.lblStatusDate.setText(QtGui.QApplication.translate("mainForm", "Jan 1", None, QtGui.QApplication.UnicodeUTF8))
         self.lblStatusTime.setText(QtGui.QApplication.translate("mainForm", "00:00", None, QtGui.QApplication.UnicodeUTF8))
         self.lblSubtotalPre.setText(QtGui.QApplication.translate("mainForm", "Subtotal:", None, QtGui.QApplication.UnicodeUTF8))

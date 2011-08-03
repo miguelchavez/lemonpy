@@ -27,6 +27,9 @@ from ui_mainview import *
 import decimal
 from decimal import *
 
+#our components
+from widgets.cmPasswordDialog import *
+
 #django imports
 import os, sys
 from django.utils.translation import ugettext as _
@@ -57,6 +60,8 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         # go fullscreen
         self.showFullScreen() #TODO:Add an option to not show fullscreen.
 
+        self.clearWidgets()
+        self.setupInputFilters()
         self.createActions()
         self.createToolBars()
 
@@ -86,6 +91,10 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
         QtCore.QTimer.singleShot(1000, self.setupSalesWidget) #wait some time to let the widget take its final size.
 
+        self.lockDialog = cmPasswordDialog(self, ":/icons/images/dialog.svg", "Screen Locked.", ":/icons/images/lemon-lock-screen.png")
+        self.lockDialog.setTextColor("white")
+        self.lockDialog.setSize(300,150)
+
 
     def closeEvent(self, event):
         #TODO:  Can we close? Is there any sale in process? Ask the user to really exit and discard the sale?
@@ -94,36 +103,57 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
 
     def about(self):
-        QtGui.QMessageBox.about(self, "LemonPy v0.0 (C) 2011 Miguel Chavez Gamboa",
-                "<b>LemonPy</b> is the prototype for the new lemonPOS."
-                "The name means Lemon Pie and also refers to Python.")
+        self.lockDialog.showDialog("LemonPy 0.0 (C) 2011 Miiguel Chavez Gamboa")
+        #QtGui.QMessageBox.about(self, "LemonPy v0.0 (C) 2011 Miguel Chavez Gamboa",
+                #"<b>LemonPy</b> is the prototype for the new lemonPOS."
+                #"The name means Lemon Pie and also refers to Python.")
 
+
+    def setupInputFilters(self):
+        #Amount Validator
+        amountExpr = QtCore.QRegExp("[0-9]*[//.]{0,1}[0-9]{0,5}")
+        amountValidator = QtGui.QRegExpValidator(amountExpr, self)
+        self.editTendered.setValidator(amountValidator)
+
+        #Code validator.
+        codeExpr = QtCore.QRegExp("[0-9]*[//.]{0,1}[0-9]{0,5}[//*]{0,1}[0-9]*[A-Za-z_0-9\\\\/\\-]{0,30}")
+        codeValidator = QtGui.QRegExpValidator(codeExpr, self)
+        self.editItemCode.setValidator(codeValidator)
+
+        #TODO: Card number validators. and more payment options when implemented.
+
+    def clearWidgets(self):
+        self.editItemCode.clear()
+        self.editTendered.clear()
+        self.tableSale.clearContents()
+        self.tableSale.setRowCount(0)
+        
 
     def createActions(self):
         print 'creating actions...'
-        self.exitAction = QtGui.QAction(_("E&xit"), self, shortcut="Ctrl+Q", triggered=self.close)
+        self.exitAction = QtGui.QAction(_("E&xit (Ctrl+Q)"), self, shortcut="Ctrl+Q", triggered=self.close)
         self.aboutAction = QtGui.QAction(_("&About"), self, statusTip=_("About"),  triggered=self.about)
-        self.showPaymentOptionsAction = QtGui.QAction(_("Show Payment Options"), self, shortcut="Ctrl+P", triggered=self.showPaymentOptions)
-        self.balanceAction = QtGui.QAction(_("Balance"), self, shortcut="Ctrl+B",  triggered=self.balance )
-        self.loginAction = QtGui.QAction(_("Login"), self, shortcut="Ctrl+L",  triggered=self.login )
-        self.codeFocusAction = QtGui.QAction(_("Enter Code"), self, shortcut="F2",  triggered=self.editItemCode.setFocus )
-        self.searchAction = QtGui.QAction(_("Search Products"), self, shortcut="F3",  triggered=self.showSearch )
+        self.showPaymentOptionsAction = QtGui.QAction(_("Show Payment Options (Ctrl+P)"), self, shortcut="Ctrl+P", triggered=self.showPaymentOptions)
+        self.balanceAction = QtGui.QAction(_("Balance (Ctrl+B)"), self, shortcut="Ctrl+B",  triggered=self.balance )
+        self.loginAction = QtGui.QAction(_("Login (Ctrl+L)"), self, shortcut="Ctrl+L",  triggered=self.login )
+        self.codeFocusAction = QtGui.QAction(_("Enter Code (F2)"), self, shortcut="F2",  triggered=self.editItemCode.setFocus )
+        self.searchAction = QtGui.QAction(_("Search Products (F3)"), self, shortcut="F3",  triggered=self.showSearch )
         self.removeItemAction = QtGui.QAction(_("Remove Item"), self,  triggered=self.removeSelectedItem )
-        self.finishTransactionAction = QtGui.QAction(_("Finish Transaction"), self, shortcut="F12",  triggered=self.finishTransaction )
-        self.cancelTransactionAction = QtGui.QAction(_("Cancel Transaction"), self, shortcut="F10",  triggered=self.cancelTransaction )
-        self.cancelTicketAction = QtGui.QAction(_("Cancel Ticket"), self, shortcut="F11",  triggered=self.cancelTicket )
-        self.startOperationsAction = QtGui.QAction(_("Start Operations"), self, shortcut="Ctrl+N",  triggered=self.startOperations ) #FIXME: QKeySequence::New
-        self.goPayAction = QtGui.QAction(_("Enter Payment"), self, shortcut="F4",  triggered=self.editTendered.setFocus )
-        self.priceCheckerAction = QtGui.QAction(_("Price Checker"), self, shortcut="F9",  triggered=self.showPriceChecker )
-        self.reprintTicketAction = QtGui.QAction(_("Reprint Ticket"), self, shortcut="F5",  triggered=self.reprintTicket )
-        self.cashInAction = QtGui.QAction(_("Cash In"), self, shortcut="F8",  triggered=self.cashIn )
-        self.cashOutAction = QtGui.QAction(_("Cash Out"), self, shortcut="F7",  triggered=self.cashOut )
-        self.cashAvailableAction = QtGui.QAction(_("Cash Available"), self, shortcut="F6",  triggered=self.cashAvailable )
-        self.endOfDayAction = QtGui.QAction(_("End Of Day"), self, shortcut="Ctrl+W",  triggered=self.endOfDay ) #FIXME: QKeySequence::Close
-        self.lockScreenAction = QtGui.QAction(_("Lock Screen"), self, shortcut="Ctrl+Space",  triggered=self.lockScreen ) #FIXME: Qt::CTRL+Qt::Key_Space
-        self.suspendSaleAction = QtGui.QAction(_("Suspend Sale"), self, shortcut="Ctrl+Backspace",  triggered=self.suspendSale ) #FIXME: Qt::CTRL+Qt::Key_Backspace
-        self.discountAction = QtGui.QAction(_("Apply Discount"), self, shortcut="Ctrl+D",  triggered=self.applyDiscount )
-        self.resumeSaleAction = QtGui.QAction(_("Resume Sale"), self, shortcut="Ctrl+R",  triggered=self.resumeSale )
+        self.finishTransactionAction = QtGui.QAction(_("Finish Transaction (F12)"), self, shortcut="F12",  triggered=self.finishTransaction )
+        self.cancelTransactionAction = QtGui.QAction(_("Cancel Transaction (F10)"), self, shortcut="F10",  triggered=self.cancelTransaction )
+        self.cancelTicketAction = QtGui.QAction(_("Cancel Ticket (F11)"), self, shortcut="F11",  triggered=self.cancelTicket )
+        self.startOperationsAction = QtGui.QAction(_("Start Operations (Ctrl+N)"), self, shortcut="Ctrl+N",  triggered=self.startOperations ) #FIXME: QKeySequence::New
+        self.goPayAction = QtGui.QAction(_("Enter Payment (F4)"), self, shortcut="F4",  triggered=self.editTendered.setFocus )
+        self.priceCheckerAction = QtGui.QAction(_("Price Checker (F9)"), self, shortcut="F9",  triggered=self.showPriceChecker )
+        self.reprintTicketAction = QtGui.QAction(_("Reprint Ticket (F5)"), self, shortcut="F5",  triggered=self.reprintTicket )
+        self.cashInAction = QtGui.QAction(_("Cash In (F8)"), self, shortcut="F8",  triggered=self.cashIn )
+        self.cashOutAction = QtGui.QAction(_("Cash Out (F7)"), self, shortcut="F7",  triggered=self.cashOut )
+        self.cashAvailableAction = QtGui.QAction(_("Cash Available (F6)"), self, shortcut="F6",  triggered=self.cashAvailable )
+        self.endOfDayAction = QtGui.QAction(_("End Of Day (Ctrl+W)"), self, shortcut="Ctrl+W",  triggered=self.endOfDay ) #FIXME: QKeySequence::Close
+        self.lockScreenAction = QtGui.QAction(_("Lock Screen (Ctrl+Space)"), self, shortcut="Ctrl+Space",  triggered=self.lockScreen ) #FIXME: Qt::CTRL+Qt::Key_Space
+        self.suspendSaleAction = QtGui.QAction(_("Suspend Sale (Ctrl+Backspace)"), self, shortcut="Ctrl+Backspace",  triggered=self.suspendSale ) #FIXME: Qt::CTRL+Qt::Key_Backspace
+        self.discountAction = QtGui.QAction(_("Apply Discount (Ctrl+D)"), self, shortcut="Ctrl+D",  triggered=self.applyDiscount )
+        self.resumeSaleAction = QtGui.QAction(_("Resume Sale (Ctrl+R)"), self, shortcut="Ctrl+R",  triggered=self.resumeSale )
         self.currencyConversionAction = QtGui.QAction(_("Currency Conversion"), self,  triggered=self.showCurrencyConv )
         self.configAction = QtGui.QAction(_("Configure Lemon"), self,  triggered=self.config )
         

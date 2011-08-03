@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icons">
+    <file>images/dialog.svg</file>
     <file>images/backg.png</file>
     <file>images/lemon-discount.png</file>
     <file>images/lemon-inbox.png</file>
