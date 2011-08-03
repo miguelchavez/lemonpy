@@ -42,7 +42,7 @@ class cmPasswordDialog(QtSvg.QSvgWidget):
         self.setMaxHeight(300)
         self.setMaxWidth(400)
         self.animRate = 500; #default animation speed (half second rate).
-        self.shakeTimeToLive = 0
+        self.shakeTimeToLive = 1500 #default shake time..
         self.par = False
         self.parTimes = 0
 
@@ -104,7 +104,11 @@ class cmPasswordDialog(QtSvg.QSvgWidget):
         self.message.setStyleSheet("color:%s"%(c))
 
     def getPassword(self):
-        return self.editPassword.text()
+        pswd = self.editPassword.text()
+        #here we clean the password. We cannot doit at the ReturnPressed event because at that time the password is not still retrieved by the client app.
+        #we can save the password for later if called this method again and there is not password in the editPassword
+        self.editPassword.clear()
+        return pswd
 
     def cleanPassword(self):
         self.editPassword.clear()
@@ -123,8 +127,26 @@ class cmPasswordDialog(QtSvg.QSvgWidget):
         if self.shakeTimeToLive > 0 :
             QtCore.QTimer.singleShot(self.shakeTimeToLive, self.shakeTimer.stop)
 
+
     def shakeIt(self):
-        pass
+        if self.par:
+            if self.parTimes < 5 :
+                if self.parTimes % 2 == 0 :
+                    self.setGeometry(self.geometry().x()-3, self.geometry().y()+3, self.geometry().width(), self.geometry().height())
+                else:
+                    self.setGeometry(self.geometry().x()+3, self.geometry().y()+3, self.geometry().width(), self.geometry().height())
+            self.parTimes += 1
+            if self.parTimes >39 :
+                self.parTimes = 0
+        else:
+            if self.parTimes < 5 :
+                if  self.parTimes % 2 == 0 :
+                    self.setGeometry(self.geometry().x()+3, self.geometry().y()-3, self.geometry().width(), self.geometry().height())
+                else:
+                    self.setGeometry(self.geometry().x()-3, self.geometry().y()-3, self.geometry().width(), self.geometry().height())
+        #change direction
+        self.par = not self.par
+
 
     def wave(self):
         self.wTimeLine.start()
@@ -174,5 +196,13 @@ class cmPasswordDialog(QtSvg.QSvgWidget):
         self.timeLine.setFrameRange(minStep,maxStep)
         self.timeLine.setDirection(QtCore.QTimeLine.Forward)
         self.timeLine.start()
-        self.editPassword.setFocus();
-    
+        self.editPassword.setFocus()
+
+    #def returnPressed(self):
+        #We can let the widget user (the app) to connect the editPassword returnPressed signal to its own method to authenticate the user.
+        #Example: self.lockDialog.editPassword.returnPressed.connect(self.unlockScreen)
+        #pass
+        
+
+    #TODO: Write the event handler for the enter key!. @270
+    #NOTE: How to port signals (for emitting signals)

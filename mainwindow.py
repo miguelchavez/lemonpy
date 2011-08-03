@@ -94,6 +94,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.lockDialog = cmPasswordDialog(self, ":/icons/images/dialog.svg", "Screen Locked.", ":/icons/images/lemon-lock-screen.png")
         self.lockDialog.setTextColor("white")
         self.lockDialog.setSize(300,150)
+        self.lockDialog.editPassword.returnPressed.connect(self.unlockScreen)
 
 
     def closeEvent(self, event):
@@ -103,10 +104,9 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
 
     def about(self):
-        self.lockDialog.showDialog("LemonPy 0.0 (C) 2011 Miiguel Chavez Gamboa")
-        #QtGui.QMessageBox.about(self, "LemonPy v0.0 (C) 2011 Miguel Chavez Gamboa",
-                #"<b>LemonPy</b> is the prototype for the new lemonPOS."
-                #"The name means Lemon Pie and also refers to Python.")
+        QtGui.QMessageBox.about(self, "LemonPy v0.0 (C) 2011 Miguel Chavez Gamboa",
+                "<b>LemonPy</b> is the prototype for the new lemonPOS."
+                "The name means Lemon Pie and also refers to Python.")
 
 
     def setupInputFilters(self):
@@ -242,6 +242,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.tableSale.horizontalHeader().resizeSection(2, piece*1.5)
         self.tableSale.horizontalHeader().resizeSection(3, piece*1.5)
         self.tableSale.horizontalHeader().resizeSection(4, piece*1.5)
+
     
     def showPaymentOptions(self):
         #Not coded yet...
@@ -290,7 +291,23 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         pass
 
     def lockScreen(self):
-        pass
+        #first disable the actions and ui.
+        self.disableActions()
+        self.disableUi()
+        self.lockDialog.showDialog(_("<b>This terminal is locked.</b> <br><i>Please enter the user's password to unlock it</i>."))
+        #now update balance and transaction.
+        #self.updateTransaction() #FIXME: I think this is not ui related, so it must be out of this class!
+
+    def unlockScreen(self):
+        if self.authenticateUser( self.loggedUser, self.lockDialog.getPassword() ):
+            self.enableUi()
+            self.enableActions()
+            self.lockDialog.hideDialog()
+            self.editItemCode.setFocus()
+        else:
+            #shake the password dialog
+            print 'shaking the dialog...'
+            self.lockDialog.shake()
 
     def suspendSale(self):
         pass
@@ -306,7 +323,46 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
     def config(self):
         pass
-    
+
+    def toogleActions(self, status):
+        self.exitAction.setEnabled(status)
+        self.aboutAction.setEnabled(status)
+        self.showPaymentOptionsAction.setEnabled(status)
+        self.loginAction.setEnabled(status)
+        self.balanceAction.setEnabled(status)
+        self.codeFocusAction.setEnabled(status)
+        self.searchAction.setEnabled(status)
+        self.removeItemAction.setEnabled(status)
+        self.finishTransactionAction.setEnabled(status)
+        self.cancelTransactionAction.setEnabled(status)
+        self.cancelTicketAction.setEnabled(status)
+        self.startOperationsAction.setEnabled(status)
+        self.goPayAction.setEnabled(status)
+        self.priceCheckerAction.setEnabled(status)
+        self.reprintTicketAction.setEnabled(status)
+        self.cashInAction.setEnabled(status)
+        self.cashOutAction.setEnabled(status)
+        self.cashAvailableAction.setEnabled(status)
+        self.endOfDayAction.setEnabled(status)
+        self.lockScreenAction.setEnabled(status)
+        self.suspendSaleAction.setEnabled(status)
+        self.discountAction.setEnabled(status)
+        self.resumeSaleAction.setEnabled(status)
+        self.currencyConversionAction.setEnabled(status)
+        self.configAction.setEnabled(status)
+        
+
+    def disableUi(self):
+        self.mainWidget.setEnabled(False)
+
+    def enableUi(self):
+        self.mainWidget.setEnabled(True)
+
+    def enableActions(self):
+        self.toogleActions(True)
+
+    def disableActions(self):
+        self.toogleActions(False)
 
     def updateClock(self):
         time = QtCore.QTime.currentTime()
@@ -326,6 +382,11 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         date = QtCore.QDate.currentDate()
         dateString = date.toString("dddd MMM d")
         self.lblStatusDate.setText(dateString)
+
+
+    def authenticateUser(self, user, password):
+        print 'authenticateUser::Code me!'
+        return False
 
 
     def readSettings(self):
