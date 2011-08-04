@@ -181,8 +181,9 @@ class cmAboutDialog(QtSvg.QSvgWidget):
         self.timeLine.start()
         self.button.setFocus()
 
-    #def returnPressed(self):
-        #We can let the widget user (the app) to connect the editPassword returnPressed signal to its own method to authenticate the user.
-        #Example: self.lockDialog.editPassword.returnPressed.connect(self.unlockScreen)
-        #pass
-        
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Escape :
+            self.hideDialog()
+        else:
+            #if not ESC, then let the base clase process it..
+            super(cmAboutDialog, self).keyPressEvent(event)
