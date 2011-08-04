@@ -41,7 +41,7 @@ class cmPasswordDialog(QtSvg.QSvgWidget):
         self.setFixedSize(0,0)
         self.setMaxHeight(300)
         self.setMaxWidth(400)
-        self.animRate = 500; #default animation speed (half second rate).
+        self.animRate = 1500 #default animation speed (half second rate).
         self.shakeTimeToLive = 1500 #default shake time..
         self.par = False
         self.parTimes = 0
@@ -114,6 +114,7 @@ class cmPasswordDialog(QtSvg.QSvgWidget):
         self.editPassword.clear()
 
     def hideDialog(self):
+        self.timeLine.setEasingCurve(QtCore.QEasingCurve.InExpo)
         self.timeLine.toggleDirection() #reverse!
         self.timeLine.start()
 
@@ -130,16 +131,16 @@ class cmPasswordDialog(QtSvg.QSvgWidget):
 
     def shakeIt(self):
         if self.par:
-            if self.parTimes < 5 :
+            if self.parTimes < 15 :
                 if self.parTimes % 2 == 0 :
                     self.setGeometry(self.geometry().x()-3, self.geometry().y()+3, self.geometry().width(), self.geometry().height())
                 else:
                     self.setGeometry(self.geometry().x()+3, self.geometry().y()+3, self.geometry().width(), self.geometry().height())
             self.parTimes += 1
-            if self.parTimes >39 :
+            if self.parTimes > 39 :
                 self.parTimes = 0
         else:
-            if self.parTimes < 5 :
+            if self.parTimes < 15 :
                 if  self.parTimes % 2 == 0 :
                     self.setGeometry(self.geometry().x()+3, self.geometry().y()-3, self.geometry().width(), self.geometry().height())
                 else:
@@ -164,14 +165,13 @@ class cmPasswordDialog(QtSvg.QSvgWidget):
         midPointY = (windowGeom.height()/2)
         newY = 0
         newX = 0
-
         dRect = QtCore.QRect()
         
-        if ((midPointX-(self.maxWidth/2)) < 0):
+        if (midPointX-(self.maxWidth/2)) < 0 :
             newX = 0
         else:
             newX = midPointX - self.maxWidth/2
-            
+        
         dRect.setX(newX)
         dRect.setY(step)
         dRect.setWidth(self.maxWidth)
@@ -203,6 +203,3 @@ class cmPasswordDialog(QtSvg.QSvgWidget):
         #Example: self.lockDialog.editPassword.returnPressed.connect(self.unlockScreen)
         #pass
         
-
-    #TODO: Write the event handler for the enter key!. @270
-    #NOTE: How to port signals (for emitting signals)

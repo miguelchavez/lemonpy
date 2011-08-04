@@ -29,6 +29,7 @@ from decimal import *
 
 #our components
 from widgets.cmPasswordDialog import *
+from widgets.cmAboutDialog import *
 
 #django imports
 import os, sys
@@ -91,11 +92,17 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
         QtCore.QTimer.singleShot(1000, self.setupSalesWidget) #wait some time to let the widget take its final size.
 
+        #Lock Password Dialog
         self.lockDialog = cmPasswordDialog(self, ":/icons/images/dialog.svg", "Screen Locked.", ":/icons/images/lemon-lock-screen.png")
         self.lockDialog.setTextColor("white")
         self.lockDialog.setSize(300,150)
         self.lockDialog.editPassword.returnPressed.connect(self.unlockScreen)
 
+        #About box
+        self.aboutBox = cmAboutDialog(self, ":/icons/images/about.svg", "<b>LemonPy v 0.0</b> <br>(C)2011 Miguel Chavez Gamboa.<br>miguel@lemonpos.org<br><br>")
+        self.aboutBox.setTextColor("white")
+        self.aboutBox.setSize(400,400)
+        self.aboutBox.button.clicked.connect(self.aboutBox.hideDialog)
 
     def closeEvent(self, event):
         #TODO:  Can we close? Is there any sale in process? Ask the user to really exit and discard the sale?
@@ -104,9 +111,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
 
     def about(self):
-        QtGui.QMessageBox.about(self, "LemonPy v0.0 (C) 2011 Miguel Chavez Gamboa",
-                "<b>LemonPy</b> is the prototype for the new lemonPOS."
-                "The name means Lemon Pie and also refers to Python.")
+        self.aboutBox.showDialog("")
 
 
     def setupInputFilters(self):
@@ -305,8 +310,6 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
             self.lockDialog.hideDialog()
             self.editItemCode.setFocus()
         else:
-            #shake the password dialog
-            print 'shaking the dialog...'
             self.lockDialog.shake()
 
     def suspendSale(self):
@@ -386,7 +389,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
     def authenticateUser(self, user, password):
         print 'authenticateUser::Code me!'
-        return False
+        return True
 
 
     def readSettings(self):
