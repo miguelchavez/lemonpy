@@ -100,11 +100,13 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
         #About box
         self.aboutBox = cmAboutDialog(self, ":/icons/images/about.svg",
-            "<b>LemonPy v 0.0</b> <br>(C)2011 Miguel Chavez Gamboa.<br>miguel@lemonpos.org<br><br>" \
-            "Licensed under the <a href='http://www.gnu.org/gpl'>GNU General Public License</a>"
+            "<b>LemonPy v 0.0</b> <br><i>&copy;2011 Miguel Chavez Gamboa.<br>miguel@lemonpos.org</i><br><br>" \
+            #"<a href='http://www.lemonpos.org/'>www.lemonpos.org</a>, <a href='http://sourceforge.net/apps/mediawiki/lemonpos/index.php?title=Main_Page'>the project Wiki</a><br>" \
+            "<b>LemonPy</b> is an <i>open source</i> Point of Sale software targeted for micro, small and medium businesses.<br><br>" \
+            "Licensed under the <a href='http://www.gnu.org/licenses/old-licenses/gpl-2.0.html'>GNU General Public License</a>" \
             )
         self.aboutBox.setTextColor("white")
-        self.aboutBox.setSize(400,400)
+        self.aboutBox.setSize(350,350)
         self.aboutBox.button.clicked.connect(self.aboutBox.hideDialog)
 
     def closeEvent(self, event):

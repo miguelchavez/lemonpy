@@ -107,7 +107,10 @@ class cmAboutDialog(QtSvg.QSvgWidget):
     def hideDialog(self):
         self.timeLine.setEasingCurve(QtCore.QEasingCurve.InExpo)
         self.timeLine.toggleDirection() #reverse!
+        #NOTE: Anyone using this class must be aware of THIS, the aboutBox parent must have a disableUi/actions & enableUi/actions Methods.
         self.timeLine.start()
+        self.parent.enableUi()
+        self.parent.enableActions()
 
     def onAnimationFinished(self):
         if self.timeLine.direction() == QtCore.QTimeLine.Backward :
@@ -180,6 +183,10 @@ class cmAboutDialog(QtSvg.QSvgWidget):
         self.timeLine.setDirection(QtCore.QTimeLine.Forward)
         self.timeLine.start()
         self.button.setFocus()
+
+        #NOTE: Anyone using this class must be aware of THIS, the aboutBox parent must have a disableUi/actions & enableUi/actions Methods.
+        self.parent.disableUi()
+        self.parent.disableActions()
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Escape :
