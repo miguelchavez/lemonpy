@@ -30,6 +30,7 @@ from decimal import *
 #our components
 from widgets.cmPasswordDialog import *
 from widgets.cmAboutDialog import *
+from widgets.cmLoginWindow import *
 
 #django imports
 import os, sys
@@ -38,6 +39,7 @@ from django.utils.translation import ugettext as _
 if 'DJANGO_SETTINGS_MODULE' not in os.environ:
     os.environ['DJANGO_SETTINGS_MODULE']='settings'
 
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from backend.models import *
 
@@ -116,10 +118,16 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.aboutBox.setSize(350,350)
         self.aboutBox.button.clicked.connect(self.aboutBox.hideDialog)
 
-        #Get Users
-        self.users = User.objects.all()
-        for user in self.users:
-            print 'User:%s'%user.username
+        #login window
+        self.loginWindow = cmLoginWindow(self, ":/icons/images/about.svg")
+        self.loginWindow.setSize(350, 350)
+        self.loginWindow.btnLogin.clicked.connect(self.doAuth)
+        self.loginWindow.editUsername.returnPressed.connect(self.loginWindow.editPassword.setFocus)
+        self.loginWindow.editPassword.returnPressed.connect(self.doAuth)
+        self.loginWindow.btnExit.clicked.connect(self.close)
+
+        #Launch login-dialog
+        QtCore.QTimer.singleShot(800, self.login)
 
     def closeEvent(self, event):
         #TODO:  Can we close? Is there any sale in process? Ask the user to really exit and discard the sale?
@@ -213,6 +221,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.toolBarLeft.setMovable(False)
         self.addToolBar(QtCore.Qt.LeftToolBarArea, self.toolBarLeft)
         self.toolBarLeft.addAction(self.aboutAction)
+        self.toolBarLeft.addAction(self.loginAction)
         self.toolBarLeft.addAction(self.startOperationsAction)
         self.toolBarLeft.addAction(self.balanceAction)
         self.toolBarLeft.addAction(self.endOfDayAction)
@@ -226,7 +235,6 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         #Adding the top toolbar, non-movable for some important actions. This toolbar is not on the toolbarArea, it is aside the code input box.
         self.toolBarTop = QtGui.QToolBar("Top Toolbar", self.toolWidget)
         self.toolBarTop.setMovable(False)
-        self.toolBarTop.addAction(self.loginAction)
         self.toolBarTop.addAction(self.codeFocusAction)
         self.toolBarTop.addAction(self.removeItemAction)
         self.toolBarTop.addAction(self.goPayAction)
@@ -271,7 +279,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         print 'selecting payment options...'
 
     def login(self):
-        pass
+        self.loginWindow.showDialog()
     
     def balance(self):
         pass
@@ -321,7 +329,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         #self.updateTransaction() #FIXME: I think this is not ui related, so it must be out of this class!
 
     def unlockScreen(self):
-        if self.authenticateUser( self.loggedUser, self.lockDialog.getPassword() ):
+        if self.authenticateUser( self.loggedUser, self.lockDialog.getPassword(), False ):
             self.enableUi()
             self.enableActions()
             self.lockDialog.hideDialog()
@@ -404,9 +412,24 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.lblStatusDate.setText(dateString)
 
 
-    def authenticateUser(self, user, password):
-        print 'authenticateUser::Code me!'
-        return True
+    def doAuth(self):
+        if self.authenticateUser(self.loginWindow.getUserName(), self.loginWindow.getPassword(), True ):
+            self.loginWindow.hideDialog()
+            display = '%s %s (%s)'%(self.loggedUser.first_name, self.loggedUser.last_name, self.loggedUser.username)
+            self.lblStatusCashier.setText(display)
+        else:
+            self.loginWindow.shake()
+            
+
+    def authenticateUser(self, user, passwd, cleanUser):
+        user = authenticate(username=user, password=passwd)
+        if user is not None and user.is_active and (user.is_staff or user.is_superuser):
+            self.loggedUser = user
+            return True
+        else:
+            if cleanUser:
+                self.loggedUser = None
+            return False
 
 
     def readSettings(self):
