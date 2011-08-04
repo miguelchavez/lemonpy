@@ -99,7 +99,10 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.lockDialog.editPassword.returnPressed.connect(self.unlockScreen)
 
         #About box
-        self.aboutBox = cmAboutDialog(self, ":/icons/images/about.svg", "<b>LemonPy v 0.0</b> <br>(C)2011 Miguel Chavez Gamboa.<br>miguel@lemonpos.org<br><br>")
+        self.aboutBox = cmAboutDialog(self, ":/icons/images/about.svg",
+            "<b>LemonPy v 0.0</b> <br>(C)2011 Miguel Chavez Gamboa.<br>miguel@lemonpos.org<br><br>" \
+            "Licensed under the <a href='http://www.gnu.org/gpl'>GNU General Public License</a>"
+            )
         self.aboutBox.setTextColor("white")
         self.aboutBox.setSize(400,400)
         self.aboutBox.button.clicked.connect(self.aboutBox.hideDialog)
