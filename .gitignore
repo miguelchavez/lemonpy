@@ -10,3 +10,6 @@
 release.sh
 comandos.git
 *.pyc
+test/
+skeleton/
+

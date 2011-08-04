@@ -35,12 +35,19 @@ from widgets.cmAboutDialog import *
 import os, sys
 from django.utils.translation import ugettext as _
 
+if 'DJANGO_SETTINGS_MODULE' not in os.environ:
+    os.environ['DJANGO_SETTINGS_MODULE']='settings'
+
+from django.contrib.auth.models import User
+from backend.models import *
+
 class MainWindow(QtGui.QMainWindow, Ui_mainForm):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
         #NOTE: Next code is for django to know where settings.py is.
-        os.environ['DJANGO_SETTINGS_MODULE']='settings'
+        if 'DJANGO_SETTINGS_MODULE' not in os.environ:
+            os.environ['DJANGO_SETTINGS_MODULE']='settings'
         # and to add to the sys path the path where this app is. not needed now.
         #sys.path+= [os.path.split(os.path.split(os.path.abspath(__file__))[0])[0]]
         
@@ -108,6 +115,11 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.aboutBox.setTextColor("white")
         self.aboutBox.setSize(350,350)
         self.aboutBox.button.clicked.connect(self.aboutBox.hideDialog)
+
+        #Get Users
+        self.users = User.objects.all()
+        for user in self.users:
+            print 'User:%s'%user.username
 
     def closeEvent(self, event):
         #TODO:  Can we close? Is there any sale in process? Ask the user to really exit and discard the sale?
