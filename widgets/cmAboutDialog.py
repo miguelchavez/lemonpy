@@ -30,7 +30,7 @@ class cmAboutDialog(QtSvg.QSvgWidget):
         #self.icon    = QtGui.QLabel()
         #self.hLayout = QtGui.QHBoxLayout()
         self.vLayout = QtGui.QVBoxLayout()
-        self.vLayout.setContentsMargins(20,70,20,20)
+        self.vLayout.setContentsMargins(20,60,20,20)
         self.spring = QtGui.QSpacerItem(20, 20, QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding)
         self.button = QtGui.QPushButton(self)
         self.button.setDefault(True)
