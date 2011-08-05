@@ -190,6 +190,7 @@ class cmFloatPanel(QtSvg.QSvgWidget):
 
 
     def showPanel(self):
+        self.timeLine.setEasingCurve(QtCore.QEasingCurve.OutExpo)
         if self.timeLine.state() == QtCore.QTimeLine.NotRunning and not self.canBeHidden:
             self.setGeometry(-1000,-1000,0,0)
             self.show()
