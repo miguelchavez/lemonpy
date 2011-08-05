@@ -112,11 +112,6 @@ class cmTipPanel(QtSvg.QSvgWidget):
     def setIcon(self, icon):
         self.icon.setPixmap(icon)
 
-    #def hidePanel(self):
-        #if self.canBeHidden:
-            #self.timeLine.setEasingCurve(QtCore.QEasingCurve.InExpo)
-            #self.timeLine.toggleDirection() #reverse!
-            #self.timeLine.start()
 
     def showTip(self, msg, ttl):
         self.showPanel(msg, ttl) #simply a shortcut
@@ -162,11 +157,5 @@ class cmTipPanel(QtSvg.QSvgWidget):
     def mousePressEvent(self, event):
         self.autoHide() #we simply want to close the tip on any mouse click
         self.closedByUser = True
-        super(cmTipPanel, self).keyPressEvent(event) #FIXME:Really needed?
+        super(cmTipPanel, self).keyPressEvent(event) #NOTE:Really needed?
 
-    def keyPressEvent(self, event):
-        if event.key() == QtCore.Qt.Key_Escape:
-            self.autoHide()
-        else:
-            #if not ESC, then let the base clase process it..
-            super(cmTipPanel, self).keyPressEvent(event)
