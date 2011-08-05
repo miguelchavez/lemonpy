@@ -61,11 +61,11 @@ class cmFloatPanel(QtSvg.QSvgWidget):
         #Gui components
         self.hLayout = QtGui.QHBoxLayout()
         self.hLayout.setContentsMargins(self.margin,self.margin,self.margin,self.margin)
-        self.setLayout(hLayout)
+        self.setLayout(self.hLayout)
         self.load(File)
         
         #Postition it on its place
-        QTimer::singleShot(100, self.reposition)
+        QtCore.QTimer.singleShot(100, self.reposition)
         
         #animation
         self.timeLine  = QtCore.QTimeLine(self.animRate, self)
@@ -92,44 +92,10 @@ class cmFloatPanel(QtSvg.QSvgWidget):
 
     def setPosition(self, pos):
         #only changes the position when the notification is not showing..
-        if timeLine.state() == QtCore.QTimeLine.NotRunning and not self.canBeHidden:
+        if self.timeLine.state() == QtCore.QTimeLine.NotRunning and not self.canBeHidden:
             self.position = pos
             #recalculate its rect and show it there...
             self.reposition()
-
-    def reposition(self):
-        windowGeom = self.parent.geometry()
-        int midPointX = (windowGeom.width()/2)
-        int midPointY = (windowGeom.height()/2)
-        newX = 0
-        newY = 0
-        dRect = QRect()
-
-        if (midPointX-(self.maxWidth/2)) < 0:
-            newX = 0
-        else:
-            newX = midPointX - (self.maxWidth/2)
-
-        if (midPointY-(self.maxHeight/2)) < 0:
-            newY = 0
-        else:
-            newY = midPointY - (self.maxHeight/2);
-
-        #what position is it?
-        if self.position == PanelPosition.Top:
-            newY = self.margin-self.maxHeight
-        elif self.position == PanelPosition.Bottom:
-            newY = self.parent.height()+self.height()-self.margin
-        elif self.position == PanelPosition.Left:
-            newX = self.margin-self.maxWidth
-        else: #Right
-            newX = self.parent.width()-self.margin
-
-        dRect.setX(newX)
-        dRect.setY(newY);
-        self.setFixedWidth(self.maxWidth) #width maybe is not yet defined.
-        self.setFixedHeight(maxHeight)
-        self.setGeometry(dRect)
 
 
     def addWidget(self, widget):
@@ -188,6 +154,41 @@ class cmFloatPanel(QtSvg.QSvgWidget):
         self.reposition()
         QtCore.QTimer.singleShot(100, self.show)
 
+    def reposition(self):
+        windowGeom = self.parent.geometry()
+        midPointX = (windowGeom.width()/2)
+        midPointY = (windowGeom.height()/2)
+        newX = 0
+        newY = 0
+        dRect = QtCore.QRect()
+
+        if (midPointX-(self.maxWidth/2)) < 0:
+            newX = 0
+        else:
+            newX = midPointX - (self.maxWidth/2)
+
+        if (midPointY-(self.maxHeight/2)) < 0:
+            newY = 0
+        else:
+            newY = midPointY - (self.maxHeight/2);
+
+        #what position is it?
+        if self.position == PanelPosition.Top:
+            newY = self.margin-self.maxHeight
+        elif self.position == PanelPosition.Bottom:
+            newY = self.parent.height()+self.height()-self.margin
+        elif self.position == PanelPosition.Left:
+            newX = self.margin-self.maxWidth
+        else: #Right
+            newX = self.parent.width()-self.margin
+
+        dRect.setX(newX)
+        dRect.setY(newY)
+        self.setFixedWidth(self.maxWidth) #width maybe is not yet defined.
+        self.setFixedHeight(self.maxHeight)
+        self.setGeometry(dRect)
+
+
     def showPanel(self):
         if self.timeLine.state() == QtCore.QTimeLine.NotRunning and not self.canBeHidden:
             self.setGeometry(-1000,-1000,0,0)
@@ -232,7 +233,8 @@ class cmFloatPanel(QtSvg.QSvgWidget):
         else:
             newY = midPointY - (self.maxHeight/2)
 
-        if self.position == (PanelPosition.Bottom or PanelPosition.Top):
+
+        if self.position == PanelPosition.Bottom or self.position ==  PanelPosition.Top:
             dRect.setX(newX)
             dRect.setY(step)
         else:
