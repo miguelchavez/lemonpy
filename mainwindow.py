@@ -136,7 +136,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
 
     def about(self):
-        self.aboutBox.showDialog("")
+        self.aboutBox.showDialog()
 
 
     def setupInputFilters(self):
@@ -276,7 +276,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
     
     def showPaymentOptions(self):
         #Not coded yet...
-        print 'selecting payment options...'
+        pass
 
     def login(self):
         self.loginWindow.showDialog()

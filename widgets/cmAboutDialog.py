@@ -166,9 +166,7 @@ class cmAboutDialog(QtSvg.QSvgWidget):
         self.setFixedWidth(self.maxWidth)
 
 
-    def showDialog(self, msg):
-        if msg:
-            self.setMessage( msg )
+    def showDialog(self):
         self.setGeometry(-1000,-1000,0,0)
         self.show()
         maxStep = 0

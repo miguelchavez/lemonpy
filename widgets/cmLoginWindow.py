@@ -161,7 +161,7 @@ class cmLoginWindow(QtSvg.QSvgWidget):
 
 
     def shakeIt(self):
-        print 'shaking...  par:%s  parTimes:%s'%(self.par, self.parTimes)
+        #print 'shaking...  par:%s  parTimes:%s'%(self.par, self.parTimes)
         if self.par:
             if self.parTimes < 10 :
                 if self.parTimes % 2 == 0 :
