@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="icons">
+    <file>images/tipAbove.svg</file>
+    <file>images/tip.svg</file>
     <file>images/panel_top.svg</file>
     <file>images/about.svg</file>
     <file>images/dialog.svg</file>

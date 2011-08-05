@@ -32,6 +32,7 @@ from widgets.cmPasswordDialog import *
 from widgets.cmAboutDialog import *
 from widgets.cmLoginWindow import *
 from widgets.cmFloatPanel import *
+from widgets.cmTipPanel import *
 
 #django imports
 import os, sys
@@ -128,7 +129,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.loginWindow.editPassword.returnPressed.connect(self.doAuth)
         self.loginWindow.btnExit.clicked.connect(self.close)
 
-        #a float panel
+        #a float panel FIXME: This is only a test. 
         self.floatPanel = cmFloatPanel(self, ":/icons/images/panel_top.svg", PanelPosition.Top, 550,250)
         self.floatPanel.addWidget(self.groupPayment)
         self.floatPanel.setMode(PanelMode.Auto)
@@ -137,8 +138,15 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.floatPanel.show()
         self.groupPayment.setVisible(True)
 
+        #a tip panel FIXME: Only a test
+        self.tipPanel = cmTipPanel(self.mainWidget, self.editItemCode, ":/icons/images/tip.svg", ":/icons/images/lemon-barcode.png", TipPosition.Below)
+        self.editItemCode.returnPressed.connect(self.showTip)
+
         #Launch login-dialog
         QtCore.QTimer.singleShot(800, self.login)
+
+    def showTip(self):
+        self.tipPanel.showTip("Hey, this is a test!", 4000)
 
     def closeEvent(self, event):
         #TODO:  Can we close? Is there any sale in process? Ask the user to really exit and discard the sale?
