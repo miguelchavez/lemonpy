@@ -62,6 +62,7 @@ class cmAboutDialog(QtSvg.QSvgWidget):
         self.message.setWordWrap(True)
         self.message.setAlignment(QtCore.Qt.AlignJustify | QtCore.Qt.AlignVCenter)
         self.message.setMargin(5)
+        self.message.setOpenExternalLinks(True)
         #self.icon.setPixmap(icon)
         #self.icon.setMaximumHeight(70)
         #self.icon.setMaximumWidth(70)
