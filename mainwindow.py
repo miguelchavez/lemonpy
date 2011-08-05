@@ -31,6 +31,7 @@ from decimal import *
 from widgets.cmPasswordDialog import *
 from widgets.cmAboutDialog import *
 from widgets.cmLoginWindow import *
+from widgets.cmFloatPanel import *
 
 #django imports
 import os, sys
@@ -77,7 +78,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
         #TODO: Decide which method use to get payment options.
         #      By default is CASH, a button to launch a dialog to get debit/credit card data. Another payment method?
-        self.groupPaymentClient.setVisible(False) #reparent this to the dialog -use mibit dialogs when ported to python.
+        self.groupPayment.setVisible(False) #reparent this to the dialog -use mibit dialogs when ported to python.
 
         #flags setup
         self.loggedUser = None #This will be a django model instance.
@@ -125,6 +126,15 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.loginWindow.editUsername.returnPressed.connect(self.loginWindow.editPassword.setFocus)
         self.loginWindow.editPassword.returnPressed.connect(self.doAuth)
         self.loginWindow.btnExit.clicked.connect(self.close)
+
+        #a float panel
+        self.floatPanel = cmFloatPanel(self, ":/icons/images/panel_top.svg", PanelPosition.Top, 550,250)
+        self.floatPanel.addWidget(self.groupPayment)
+        self.floatPanel.setMode(PanelMode.Auto)
+        self.floatPanel.setPosition(PanelPosition.Top)
+        self.floatPanel.setHiddenCompletely(False)
+        self.floatPanel.show()
+        self.groupPayment.setVisible(True)
 
         #Launch login-dialog
         QtCore.QTimer.singleShot(800, self.login)
