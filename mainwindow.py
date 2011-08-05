@@ -110,8 +110,9 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
         #About box
         self.aboutBox = cmAboutDialog(self, ":/icons/images/about.svg",
-            _("<b>LemonPy v 0.0</b> <br><i>&copy;2011 Miguel Chavez Gamboa.<br>miguel@lemonpos.org</i><br><br>" \
-            #"<a href='http://www.lemonpos.org/'>www.lemonpos.org</a>, <a href='http://sourceforge.net/apps/mediawiki/lemonpos/index.php?title=Main_Page'>the project Wiki</a><br>" \
+            _("<b>LemonPy v 0.0</b> <br><i>&copy;2011 Miguel Chavez Gamboa.<br>miguel@lemonpos.org</i><br>" \
+            "<a href='http://www.lemonpos.org/'>http://www.lemonpos.org/</a>, <br>"\
+            "<a href='http://sourceforge.net/apps/mediawiki/lemonpos/index.php?title=Main_Page'>The Wiki</a><br><br>" \
             "<b>LemonPy</b> is an <i>open source</i> Point of Sale software targeted for micro, small and medium businesses.<br><br>" \
             "Licensed under the <a href='http://www.gnu.org/licenses/old-licenses/gpl-2.0.html'>GNU General Public License</a>" \
             ))
