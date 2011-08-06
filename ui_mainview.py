@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mainview.ui'
 #
-# Created: Fri Aug  5 14:51:39 2011
+# Created: Fri Aug  5 19:03:30 2011
 #      by: pyside-uic 0.2.9 running on PySide 1.0.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -29,7 +29,7 @@ class Ui_mainForm(object):
         self.label = QtGui.QLabel(self.mainWidget)
         self.label.setObjectName("label")
         self.horizontalLayout_2.addWidget(self.label)
-        self.editItemCode = QtGui.QLineEdit(self.mainWidget)
+        self.editItemCode = cmLineEdit(self.mainWidget)
         self.editItemCode.setMaximumSize(QtCore.QSize(300, 16777215))
         self.editItemCode.setFrame(True)
         self.editItemCode.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
@@ -348,7 +348,7 @@ class Ui_mainForm(object):
         self.tenderedWidgetLayout.setContentsMargins(0, 0, 0, 0)
         self.tenderedWidgetLayout.setObjectName("tenderedWidgetLayout")
         self.horizontalLayout_4.addWidget(self.tenderedWidget)
-        self.editTendered = QtGui.QLineEdit(self.groupTotals)
+        self.editTendered = cmLineEdit(self.groupTotals)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -359,6 +359,7 @@ class Ui_mainForm(object):
         self.editTendered.setInputMask("")
         self.editTendered.setText("")
         self.editTendered.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.editTendered.setPlaceholderText("")
         self.editTendered.setObjectName("editTendered")
         self.horizontalLayout_4.addWidget(self.editTendered)
         self.gridLayout.addLayout(self.horizontalLayout_4, 3, 1, 1, 1)
@@ -394,6 +395,6 @@ class Ui_mainForm(object):
         self.labelTotalpre.setText(QtGui.QApplication.translate("mainForm", "Total:", None, QtGui.QApplication.UnicodeUTF8))
         self.labelChangepre.setText(QtGui.QApplication.translate("mainForm", "Change:", None, QtGui.QApplication.UnicodeUTF8))
         self.lblTendered.setText(QtGui.QApplication.translate("mainForm", "Tendered:", None, QtGui.QApplication.UnicodeUTF8))
-        self.editTendered.setPlaceholderText(QtGui.QApplication.translate("mainForm", "Enter amount", None, QtGui.QApplication.UnicodeUTF8))
 
+from widgets.cmLineEdit import cmLineEdit
 import mainview_rc

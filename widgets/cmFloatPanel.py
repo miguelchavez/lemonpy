@@ -104,8 +104,6 @@ class cmFloatPanel(QtSvg.QSvgWidget):
 
     def hideOnUserRequest(self):
         self.hideDialog()
-        #How to emit a signal?
-        #FIXME: emit hiddenOnUserRequest()
 
 
     def setMode(self, mode):

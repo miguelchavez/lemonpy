@@ -42,7 +42,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="editItemCode">
+         <widget class="cmLineEdit" name="editItemCode">
           <property name="maximumSize">
            <size>
             <width>300</width>
@@ -823,7 +823,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="editTendered">
+              <widget class="cmLineEdit" name="editTendered">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -852,7 +852,7 @@
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
                <property name="placeholderText">
-                <string>Enter amount</string>
+                <string notr="true"/>
                </property>
               </widget>
              </item>
@@ -868,6 +868,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>cmLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>widgets/cmLineEdit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="mainview.qrc"/>
  </resources>

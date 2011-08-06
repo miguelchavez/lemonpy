@@ -33,6 +33,7 @@ from widgets.cmAboutDialog import *
 from widgets.cmLoginWindow import *
 from widgets.cmFloatPanel import *
 from widgets.cmTipPanel import *
+from widgets.cmLineEdit import *
 
 #django imports
 import os, sys
@@ -57,6 +58,9 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         
         
         self.setupUi(self)
+        self.editItemCode.setEmptyMessage(_("Enter code or qty*code. <Enter> or <+> Keys to enter the tendered amount."))
+        self.editItemCode.setToolTip(_("Enter code or qty*code. <Enter> or <+> Keys to enter the tendered amount."))
+
 
         self.setCentralWidget(self.mainWidget)
         #NOTE: I dont know if this is a bug, but i need to include a QWidget container which is parent of all widgets and its layouts
@@ -102,6 +106,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.lblStatusCashier.setText("Unattended")
 
         QtCore.QTimer.singleShot(1000, self.setupSalesWidget) #wait some time to let the widget take its final size.
+
 
         #Lock Password Dialog
         self.lockDialog = cmPasswordDialog(self, ":/icons/images/dialog.svg", "Screen Locked.", ":/icons/images/lemon-lock-screen.png")
