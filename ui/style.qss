@@ -52,7 +52,7 @@ QLabel#labelTotalpre , QLabel#labelChangepre, QLabel#lblTendered
    Theming the ScrollArea gives same result but, with a strange behavoir, the headers are black...*/
 QTableWidget#tableReturnProducts, QListView#listView, QTableWidget#tableSale,QTableWidget#tableSearch,QTableView#ticketView
 {
-  /*selection-background-color: #94f2b4;*/ /*#c4e4f7;*/
+  selection-background-color: gray; /*#c4e4f7;*/
   /*selection-color: blue;*/
   background-color: white;
   background-image: url(':/icons/images/backg.png');

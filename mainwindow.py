@@ -60,6 +60,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.setupUi(self)
         self.editItemCode.setEmptyMessage(_("Enter code or qty*code. <Enter> or <+> Keys to enter the tendered amount."))
         self.editItemCode.setToolTip(_("Enter code or qty*code. <Enter> or <+> Keys to enter the tendered amount."))
+        self.editTendered.setEmptyMessage(_("Enter the amount..."))
 
 
         self.setCentralWidget(self.mainWidget)
@@ -96,6 +97,8 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.drawerCreated = False #TODO: investigate about open a device -same as qt....
         self.currentBalanceId = 0
         self.operationStarted = False
+        self.rowOver = -1 #used to track the cell where the mouse is over. to inc/dec buttons for tableSale.
+
 
         #Create timer for the clock/date
         self.timerClock = QtCore.QTimer(self)
@@ -134,13 +137,13 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.loginWindow.editPassword.returnPressed.connect(self.doAuth)
         self.loginWindow.btnExit.clicked.connect(self.close)
 
-        #a float panel FIXME: This is only a test. 
-        self.floatPanel = cmFloatPanel(self, ":/icons/images/panel_top.svg", PanelPosition.Top, 550,250)
-        self.floatPanel.addWidget(self.groupPayment)
-        self.floatPanel.setMode(PanelMode.Auto)
-        self.floatPanel.setPosition(PanelPosition.Top)
-        self.floatPanel.setHiddenCompletely(False)
-        self.floatPanel.show()
+        #the payment options panel
+        self.paymentOptionsPanel = cmFloatPanel(self.groupTotals, ":/icons/images/panel_top.svg", PanelPosition.Top, self.groupTotals.width(),150)
+        self.paymentOptionsPanel.addWidget(self.groupPayment)
+        self.paymentOptionsPanel.setMode(PanelMode.Manual)
+        self.paymentOptionsPanel.setPosition(PanelPosition.Top)
+        self.paymentOptionsPanel.setHiddenCompletely(True)
+        self.paymentOptionsPanel.hide()
         self.groupPayment.setVisible(True)
 
         #a tip panel FIXME: Only a test
@@ -287,6 +290,10 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
 
     ########################## METHODS ###########################
 
+    def updateRowOver(self, row, col):
+        self.rowOver = row
+        self.tableSale.setCurrentCell(row, col)
+
     def setupSalesWidget(self):
         tableSize = self.tableSale.size()
         piece = tableSize.width()/10
@@ -297,10 +304,71 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         self.tableSale.horizontalHeader().resizeSection(3, piece*1.5)
         self.tableSale.horizontalHeader().resizeSection(4, piece*1.5)
 
+        #Next to enable the mouse tracking and know where the mouse is in the table (which cell) for the +/- buttons to work!
+        #the problem would be when using a touchscreen.
+        self.tableSale.setMouseTracking(True)
+        self.tableSale.cellEntered[int,int].connect(self.updateRowOver)
+
+    def addItem(self):
+        #now it is proof of concept for buttons inside CELLS.
+        insertedAt = self.tableSale.rowCount()
+
+        text = QtGui.QLabel("3")
+        addQtyBtn = QtGui.QPushButton("+")
+        remQtyBtn = QtGui.QPushButton("-")
+        wid = QtGui.QWidget()
+        layout = QtGui.QHBoxLayout()
+        wid.setLayout(layout)
+        layout.addWidget(remQtyBtn)
+        layout.addWidget(text)
+        layout.addWidget(addQtyBtn)
+        addQtyBtn.clicked.connect(self.incItem)
+        remQtyBtn.clicked.connect(self.remItem)
+        remQtyBtn.setMouseTracking(True) #this is important!
+        addQtyBtn.setMouseTracking(True) #this is important!
+        text.setMouseTracking(True) #this is important!
+        wid.setMouseTracking(True) #this is important!
+
+        self.tableSale.insertRow(insertedAt)
+        self.tableSale.setCellWidget(insertedAt, 0, wid)
+        self.tableSale.setItem(insertedAt, 1, QtGui.QTableWidgetItem("An article"))
+        self.tableSale.setItem(insertedAt, 2, QtGui.QTableWidgetItem("2.99"))
+        self.tableSale.setItem(insertedAt, 3, QtGui.QTableWidgetItem("0.0"))
+        self.tableSale.setItem(insertedAt, 4, QtGui.QTableWidgetItem("2.99"))
+
+    def incItem(self):
+        #first investigate in which row the button is.
+        #NOTE: The problem here is that the buttons can be clicked without selecting a row, so we cannot know where is it easily.
+        #      To fix this, we connect the table's cellEntered signal to a method to save the row over. Also we select such row.
+        row = self.tableSale.currentRow()
+        if row == -1:
+            row = self.rowOver
+
+
+        #now change the qty cell at row row.
+        text = QtGui.QLabel("1") #here the text is random because we still do not have the facilities to get such data (products hash)
+        addQtyBtn = QtGui.QPushButton("+")
+        remQtyBtn = QtGui.QPushButton("-")
+        wid = QtGui.QWidget()
+        layout = QtGui.QHBoxLayout()
+        wid.setLayout(layout)
+        layout.addWidget(remQtyBtn)
+        layout.addWidget(text)
+        layout.addWidget(addQtyBtn)
+        addQtyBtn.clicked.connect(self.incItem)
+        remQtyBtn.clicked.connect(self.remItem)
+
+        self.tableSale.setCellWidget(row, 0, wid) # column 0 is the Qty colum.
+
+        #Recalculate totals... TODO!
+
+
+    def remItem(self):
+        self.incItem()
     
     def showPaymentOptions(self):
         #Not coded yet...
-        pass
+        self.paymentOptionsPanel.showPanel()
 
     def login(self):
         self.loginWindow.showDialog()
@@ -441,6 +509,10 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
             self.loginWindow.hideDialog()
             display = '%s %s (%s)'%(self.loggedUser.first_name, self.loggedUser.last_name, self.loggedUser.username)
             self.lblStatusCashier.setText(display)
+            #FIXME: remover esto!...
+            self.addItem()
+            self.addItem()
+            self.addItem()
         else:
             self.loginWindow.shake()
             
