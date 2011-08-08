@@ -7,6 +7,8 @@ The code name lemon py reads like "**lemon pie**", 'py' refers to python, that i
 lemonPy uses Qt4 via *pySide*, and uses *django* as a helper for database creation and administration application in the first stage and its ORM to
 help the rapid development [we hope so].
 
+_Read the [wiki](http://github.com/miguelchavez/lemonpy/wiki) for more information._
+
 
 Miguel Chavez Gamboa.
 
