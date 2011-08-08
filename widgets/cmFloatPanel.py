@@ -127,7 +127,7 @@ class cmFloatPanel(QtSvg.QSvgWidget):
         else:
             self.canBeHidden = False
         if self.hideCompletely:
-            hide()
+            self.hide()
 
 
     def showPanelDelayed(self):
