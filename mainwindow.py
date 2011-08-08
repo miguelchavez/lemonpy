@@ -313,6 +313,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         #now it is proof of concept for buttons inside CELLS.
         insertedAt = self.tableSale.rowCount()
 
+        # + Qty - buttons
         text = QtGui.QLabel("3")
         addQtyBtn = QtGui.QPushButton("+")
         remQtyBtn = QtGui.QPushButton("-")
@@ -323,15 +324,32 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         layout.addWidget(text)
         layout.addWidget(addQtyBtn)
         addQtyBtn.clicked.connect(self.incItem)
-        remQtyBtn.clicked.connect(self.remItem)
+        remQtyBtn.clicked.connect(self.decItem)
         remQtyBtn.setMouseTracking(True) #this is important!
         addQtyBtn.setMouseTracking(True) #this is important!
         text.setMouseTracking(True) #this is important!
         wid.setMouseTracking(True) #this is important!
 
+        #Remove item button and Article name
+        removeBtn = QtGui.QPushButton()
+        removeBtn.setIcon(QtGui.QIcon(":/icons/images/lemon-eraser.png"))
+        removeBtn.clicked.connect(self.removeItem)
+        removeBtn.setMouseTracking(True)
+        removeBtn.setMaximumWidth(32)
+        removeBtn.setToolTip(_("Remove this article"))
+        textA = QtGui.QLabel("An Article")
+        widR = QtGui.QWidget()
+        widR.setMouseTracking(True)
+        layR = QtGui.QHBoxLayout()
+        widR.setLayout(layR)
+        layR.addWidget(removeBtn)
+        layR.addWidget(textA)
+        
+
         self.tableSale.insertRow(insertedAt)
         self.tableSale.setCellWidget(insertedAt, 0, wid)
-        self.tableSale.setItem(insertedAt, 1, QtGui.QTableWidgetItem("An article"))
+        self.tableSale.setCellWidget(insertedAt, 1, widR)
+        #self.tableSale.setItem(insertedAt, 1, QtGui.QTableWidgetItem("An article"))
         self.tableSale.setItem(insertedAt, 2, QtGui.QTableWidgetItem("2.99"))
         self.tableSale.setItem(insertedAt, 3, QtGui.QTableWidgetItem("0.0"))
         self.tableSale.setItem(insertedAt, 4, QtGui.QTableWidgetItem("2.99"))
@@ -363,8 +381,11 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         #Recalculate totals... TODO!
 
 
-    def remItem(self):
+    def decItem(self):
         self.incItem()
+
+    def removeItem(self):
+        pass
     
     def showPaymentOptions(self):
         #Not coded yet...
