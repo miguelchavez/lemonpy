@@ -37,24 +37,25 @@ from widgets.cmLineEdit import *
 
 #django imports
 import os, sys
-from django.utils.translation import ugettext as _
+#from django.utils.translation import ugettext as _
+from gettext import gettext as _
 
-if 'DJANGO_SETTINGS_MODULE' not in os.environ:
-    os.environ['DJANGO_SETTINGS_MODULE']='settings'
+#if 'DJANGO_SETTINGS_MODULE' not in os.environ:
+#    os.environ['DJANGO_SETTINGS_MODULE']='settings'
 
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
-from backend.models import *
+#from django.contrib.auth import authenticate
+#from django.contrib.auth.models import User
+#from backend.models import *
 
 class MainWindow(QtGui.QMainWindow, Ui_mainForm):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
         #NOTE: Next code is for django to know where settings.py is.
-        if 'DJANGO_SETTINGS_MODULE' not in os.environ:
-            os.environ['DJANGO_SETTINGS_MODULE']='settings'
-        # and to add to the sys path the path where this app is. not needed now.
-        #sys.path+= [os.path.split(os.path.split(os.path.abspath(__file__))[0])[0]]
+        #if 'DJANGO_SETTINGS_MODULE' not in os.environ:
+        #    os.environ['DJANGO_SETTINGS_MODULE']='settings'
+        ## and to add to the sys path the path where this app is. not needed now.
+        ##sys.path+= [os.path.split(os.path.split(os.path.abspath(__file__))[0])[0]]
         
         
         self.setupUi(self)
@@ -293,8 +294,12 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
     def updateRowOver(self, row, col):
         self.rowOver = row
         self.tableSale.setCurrentCell(row, col)
+        #When a button is clicked, later the row over event is not fired in a consistent way :(
 
     def setupSalesWidget(self):
+        '''
+        Adjust sizes of the table columns
+        '''
         tableSize = self.tableSale.size()
         piece = tableSize.width()/10
         self.tableSale.horizontalHeader().setResizeMode(QtGui.QHeaderView.Interactive)
@@ -358,13 +363,14 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         #first investigate in which row the button is.
         #NOTE: The problem here is that the buttons can be clicked without selecting a row, so we cannot know where is it easily.
         #      To fix this, we connect the table's cellEntered signal to a method to save the row over. Also we select such row.
+        # Later i discovered that when one button is clicked, the onOver event is not reported in a consistent way, some times it fails.
         row = self.tableSale.currentRow()
         if row == -1:
             row = self.rowOver
 
 
         #now change the qty cell at row row.
-        text = QtGui.QLabel("1") #here the text is random because we still do not have the facilities to get such data (products hash)
+        text = QtGui.QLabel("1") #here the text is random because we still do not have the facilities to get such data (products hash) or increment a variable.
         addQtyBtn = QtGui.QPushButton("+")
         remQtyBtn = QtGui.QPushButton("-")
         wid = QtGui.QWidget()
@@ -374,7 +380,7 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
         layout.addWidget(text)
         layout.addWidget(addQtyBtn)
         addQtyBtn.clicked.connect(self.incItem)
-        remQtyBtn.clicked.connect(self.remItem)
+        #remQtyBtn.clicked.connect(self.remItem)
 
         self.tableSale.setCellWidget(row, 0, wid) # column 0 is the Qty colum.
 
@@ -528,9 +534,10 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
     def doAuth(self):
         if self.authenticateUser(self.loginWindow.getUserName(), self.loginWindow.getPassword(), True ):
             self.loginWindow.hideDialog()
-            display = '%s %s (%s)'%(self.loggedUser.first_name, self.loggedUser.last_name, self.loggedUser.username)
-            self.lblStatusCashier.setText(display)
-            #FIXME: remover esto!...
+            #display = '%s %s (%s)'%(self.loggedUser.first_name, self.loggedUser.last_name, self.loggedUser.username) removed code from django auth.
+            #self.lblStatusCashier.setText(display)
+            self.lblStatusCashier.setText("An user logged in. DEMO MODE")
+            #FIXME: remove this!... only demo
             self.addItem()
             self.addItem()
             self.addItem()
@@ -539,18 +546,24 @@ class MainWindow(QtGui.QMainWindow, Ui_mainForm):
             
 
     def authenticateUser(self, user, passwd, cleanUser):
-        user = authenticate(username=user, password=passwd)
-        if user is not None and user.is_active and (user.is_staff or user.is_superuser):
-            self.loggedUser = user
-            return True
-        else:
-            if cleanUser:
-                self.loggedUser = None
-            return False
+        #return a random value [True, False] just for demo.
+        import random
+        val = random.sample([True, False],  1)
+        
+        return val[0] #removed code is using django Auth module.
+        
+        #user = authenticate(username=user, password=passwd)
+        #if user is not None and user.is_active and (user.is_staff or user.is_superuser):
+        #    self.loggedUser = user
+        #    return True
+        #else:
+        #    if cleanUser:
+        #        self.loggedUser = None
+        #    return False
 
 
     def readSettings(self):
-        #settings = QtCore.QSettings("codea.me", "lemonPy")
+        #settings = QtCore.QSettings("codea.me", "lemonPy") # This is to read a settings file. But, dont we want that almost every setting lives at database?
         pass
         #pos = settings.value("pos", QtCore.QPoint(200, 200))
         #size = settings.value("size", QtCore.QSize(400, 400))

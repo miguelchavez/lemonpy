@@ -21,7 +21,8 @@
 from PySide import QtGui, QtCore, QtSvg
 
 
-from django.utils.translation import ugettext as _
+#from django.utils.translation import ugettext as _
+from gettext import gettext as _
 
 class cmLineEdit(QtGui.QLineEdit):
     '''

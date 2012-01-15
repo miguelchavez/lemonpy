@@ -21,7 +21,8 @@
 from PySide import QtGui, QtCore, QtSvg
 
 
-from django.utils.translation import ugettext as _
+#from django.utils.translation import ugettext as _
+from gettext import gettext as _
 
 class cmLoginWindow(QtSvg.QSvgWidget):
     def __init__(self, parent, File):
